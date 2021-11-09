@@ -20,11 +20,14 @@ async function run() {
         await client.connect();
 
         const database = client.db("real_estate");
-        const tourPlans = database.collection("properties")
-        const bookedEvent = database.collection("booked_properties")
-        const bookedEvent = database.collection("users")
-
-
+        const properties = database.collection("properties")
+        const bookedProperties = database.collection("booked_properties")
+        const users = database.collection("users")
+        //GET API
+        app.get('/properties', async (req, res) => {
+            const result = await properties.find({}).toArray();
+            res.send(result);
+        })
 
 
     } finally {
