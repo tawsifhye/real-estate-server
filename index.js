@@ -22,7 +22,7 @@ async function run() {
         const database = client.db("real_estate");
         const properties = database.collection("properties")
         const bookedProperties = database.collection("booked_properties")
-        const users = database.collection("users")
+        const usersCollection = database.collection("users")
         //GET API
         app.get('/properties', async (req, res) => {
             const result = await properties.find({}).toArray();
@@ -34,12 +34,33 @@ async function run() {
             const result = await properties.findOne(query);
             res.send(result);
         })
+        //GET API for ordered item
+        app.get('/bookedproperties', async (req, res) => {
+
+        })
+
         //POST API
         app.post('/bookedproperties', async (req, res) => {
             const item = req.body
             const result = await bookedProperties.insertOne(item);
             res.send(result);
         })
+        //User POST API
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        });
+        //User PUT API
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
     } finally {
         // await client.close();
     }
