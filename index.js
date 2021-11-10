@@ -39,6 +39,18 @@ async function run() {
 
         })
 
+        //Admin status checking
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.send({ admin: isAdmin })
+        })
+
         //POST API
         app.post('/bookedproperties', async (req, res) => {
             const item = req.body
@@ -50,7 +62,7 @@ async function run() {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             console.log(result);
-            res.json(result);
+            res.send(result);
         });
         //User PUT API
         app.put('/users', async (req, res) => {
@@ -59,7 +71,7 @@ async function run() {
             const options = { upsert: true };
             const updateDoc = { $set: user };
             const result = await usersCollection.updateOne(filter, updateDoc, options);
-            res.json(result);
+            res.send(result);
         });
 
     } finally {
