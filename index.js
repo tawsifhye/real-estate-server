@@ -28,7 +28,12 @@ async function run() {
             const result = await properties.find({}).toArray();
             res.send(result);
         })
-
+        //GET API
+        app.get('/properties/:id', async (req, res) => {
+            const query = { _id: ObjectId(req.params.id) };
+            const result = await properties.findOne(query);
+            res.send(result);
+        })
 
     } finally {
         // await client.close();
