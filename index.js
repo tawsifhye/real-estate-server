@@ -34,7 +34,12 @@ async function run() {
             const result = await properties.findOne(query);
             res.send(result);
         })
-
+        //POST API
+        app.post('/bookedproperties', async (req, res) => {
+            const item = req.body
+            const result = await bookedProperties.insertOne(item);
+            res.send(result);
+        })
     } finally {
         // await client.close();
     }
