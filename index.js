@@ -39,6 +39,13 @@ async function run() {
 
         })
 
+        //GET API for Booked ITems
+        app.get('/bookedproperties/:email', async (req, res) => {
+            const email = req.params.email;
+            const result = await bookedProperties.find({ email: { $regex: email } }).toArray();
+            res.send(result);
+        })
+
         //Admin status checking
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -57,6 +64,8 @@ async function run() {
             const result = await bookedProperties.insertOne(item);
             res.send(result);
         })
+
+
         //User POST API
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -73,6 +82,14 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         });
+
+        //Delete API for booked item
+        app.delete('/bookedproperties/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookedProperties.deleteOne(query);
+            res.json(result);
+        })
 
     } finally {
         // await client.close();
