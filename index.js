@@ -93,6 +93,28 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         });
+        //Admin role
+        app.put('/users/:email', async (req, res) => {
+            const user = req.params;
+            const filter = { email: user.email };
+            const found = await usersCollection.findOne(filter)
+            if (!found) {
+                res.send({ registered: false });
+                return;
+            }
+            if (found?.role) {
+                res.send({ isAdmin: true });
+                return;
+            }
+            const updateRole = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            const options = { upsert: true };
+            const result = await usersCollection.updateOne(filter, updateRole, options);
+            res.send(result);
+        });
         //Update order status
         app.put('/bookedproperties/:id', async (req, res) => {
             const id = req.params.id
