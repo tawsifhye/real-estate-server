@@ -37,7 +37,8 @@ async function run() {
         })
         //GET API for ordered item
         app.get('/bookedproperties', async (req, res) => {
-
+            const result = await bookedProperties.find({}).toArray();
+            res.send(result)
         })
 
         //GET API for Booked ITems
@@ -92,6 +93,20 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         });
+        //Update order status
+        app.put('/bookedproperties/:id', async (req, res) => {
+            const id = req.params.id
+            const reqStatus = req.body.status
+            const filter = { _id: ObjectId(id) }
+            // const option = { upsert: true }
+            const updatedStatus = {
+                $set: {
+                    status: reqStatus
+                }
+            }
+            const result = await bookedProperties.updateOne(filter, updatedStatus)
+            res.send(result);
+        })
 
         //Delete API for booked item
         app.delete('/bookedproperties/:id', async (req, res) => {
