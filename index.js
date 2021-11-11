@@ -23,6 +23,7 @@ async function run() {
         const properties = database.collection("properties")
         const bookedProperties = database.collection("booked_properties")
         const usersCollection = database.collection("users")
+        const usersReview = database.collection("users_review")
         //GET API
         app.get('/properties', async (req, res) => {
             const result = await properties.find({}).toArray();
@@ -45,7 +46,11 @@ async function run() {
             const result = await bookedProperties.find({ email: { $regex: email } }).toArray();
             res.send(result);
         })
-
+        //Review GET API
+        app.get('/reviews', async (req, res) => {
+            const result = await usersReview.find({}).toArray();
+            res.send(result)
+        })
         //Admin status checking
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -65,7 +70,12 @@ async function run() {
             res.send(result);
         })
 
-
+        //POST API for review
+        app.post('/reviews', async (req, res) => {
+            const review = req.body
+            const result = await usersReview.insertOne(review)
+            res.send(result)
+        })
         //User POST API
         app.post('/users', async (req, res) => {
             const user = req.body;
