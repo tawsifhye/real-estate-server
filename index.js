@@ -64,6 +64,13 @@ async function run() {
             res.send({ admin: isAdmin })
         })
 
+        //Service POST
+        app.post('/properties', async (req, res) => {
+            const item = req.body
+            const result = await properties.insertOne(item);
+            res.send(result);
+        })
+
         //POST API
         app.post('/bookedproperties', async (req, res) => {
             const item = req.body
