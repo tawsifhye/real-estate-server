@@ -133,6 +133,14 @@ async function run() {
             res.send(result);
         })
 
+        //Delete Service API
+        app.delete('/properties/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await properties.deleteOne(query);
+            res.json(result);
+        })
+
         //Delete API for booked item
         app.delete('/bookedproperties/:id', async (req, res) => {
             const id = req.params.id;
